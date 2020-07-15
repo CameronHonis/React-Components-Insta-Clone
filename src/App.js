@@ -16,28 +16,20 @@ import "./App.css";
 const App = () => {
   // Create a state called 'posts' to hold the list of posts, initializing to dummyData.
   // To make the search bar work (which is stretch) we'd need another state to hold the search term.
-  const [posts, setPosts] = useState([...dummyData])
+  const [posts, setPosts] = useState(dummyData)
+  const [query, setQuery] = useState('')
+  const [filteredPosts, setFilteredPosts] = useState([])
   const updateSearch = evt => {
-    console.log('updateSearch()')
-    console.log(evt.target.value)
-    if (evt.target.value.length === 0){
-      console.log('no characters')
-      setPosts([...dummyData])
-    } else {
-      let postsFiltered = dummyData.filter(v => v.username.includes(evt.target.value))
-      console.log(postsFiltered)
-      setPosts(postsFiltered)
-      console.log(posts)
-    }
+    evt.preventDefault()
+    setQuery(evt.target.value)
+    setFilteredPosts(dummyData.filter(v => v.username.includes(evt.target.value)))
   }
   const likePost = postId => {
     for (let i = 0; i < posts.length; i++){
       if (posts[i].id === postId){
         let postsClone = [...posts]
         postsClone[i].likes++
-        dummyData[i].likes++
         setPosts(postsClone)
-        console.log(posts)
       }
     }
     // This function is passed into nested components using props, to allow them to update application state.
@@ -53,7 +45,7 @@ const App = () => {
     <div className="App">
       {/* Add SearchBar and Posts here to render them */}
       <SearchBar updateSearch={updateSearch}/>
-      <Posts likePost={likePost} posts={dummyData}/>
+      <Posts likePost={likePost} posts={filteredPosts.length > 0 ? filteredPosts : posts}/>
       {/* Check the implementation of each component, to see what props they require, if any! */}
     </div>
   );

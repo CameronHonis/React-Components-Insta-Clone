@@ -16,6 +16,7 @@ const SearchBar = (props) => {
           type="text"
           placeholder="Search"
           onChange={props.updateSearch}
+          value={props.query}
         />
       </form>
       <div className="social-wrapper">
